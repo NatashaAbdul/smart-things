@@ -5,9 +5,6 @@ import "./devicedetail.css";
 
 function DeviceDetail() {
   const deviceId = "1987f4cb-44a5-f724-26cc-9d0520f7b32b"; //device id of HTV (from list all device api)
-  const ceilingLight1 = "68003c6b-9581-4545-b597-66d59a3e66ad"; //device id of light (from list all device api)
-  const aircon = "542d6f35-d527-9001-e262-cee622eeb2ac"; //device id of aircon (from list all device api)
-
   const [device, setDevice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,8 +12,20 @@ function DeviceDetail() {
   const [isPoweredOn, setIsPoweredOn] = useState(false);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [authToken, setAuthToken] = useState("");
-  const [temp, setTemp] = useState(22);
 
+  const lightDevices = {
+    light: "1ac05042-6d1c-488f-90e1-56c7bcd42842"
+    // ceilingLight1: "e9bd275a-91ee-470c-abc9-d279e5d48a9d",
+    // ceilingLight2: "ceb3a76d-d18f-46a3-9acd-26a49ce57a90",
+    // ceilingLight4: "1f787da4-4b86-40bc-b666-507ef599bdb6",
+    // ceilingLight3: "9932489b-ba58-45a5-8567-db00fd28ae2a",
+    // stripLight2: "84360001-f8fc-486c-9bea-19463c22b8ab",
+    // stripLight3: "b85a23a4-a1fb-4365-8c3f-89d24ff2e79b",
+    // stripLight4: "d8dc9b56-a043-4a58-9cde-d455fff2d414",
+    // stripLight1: "f63ce90f-2f13-4a44-9181-0d1d72f76792",
+    // stripLight5: "f0e3229b-843a-4bf4-8143-675b9fab3759",
+    // stripLight6: "dc9fe4c9-3a32-18c2-cd0c-0426afe6f3ef",
+  };
   // Add your service account token here
   const serviceAccountToken = "Bearer 72a6a907-7623-439b-a5eb-ae1cf7bbac86";
 
@@ -446,50 +455,6 @@ function DeviceDetail() {
     };
     await sendRemoteCommand("OK/Select", commandBody);
   };
-  const setAirconTemp = async () => {
-    if (!authToken) {
-      setRemoteStatus("Authentication required. Please refresh the page.");
-      return;
-    }
-
-    setRemoteStatus("Sending Set Aircon Temperature...");
-
-    try {
-      const commandBody = {
-        commands: [
-          {
-            component: "main",
-            capability: "thermostatCoolingSetpoint",
-            command: "setCoolingSetpoint",
-            arguments: [temp]
-          },
-        ],
-      };
-
-      const response = await fetch(
-        `https://enterprise.smartthings.com/devices/${aircon}/commands?ordered=true`,
-        getRequestOptions("POST", commandBody)
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-
-      setRemoteStatus("Set Aircon Temperature command sent successfully!");
-      setIsPoweredOn(true);
-
-      // Refresh device status after a short delay
-      setTimeout(() => {
-        fetchDeviceStatus();
-      }, 1000);
-
-      // Clear status after 3 seconds
-      setTimeout(() => setRemoteStatus(""), 3000);
-    } catch (error) {
-      setRemoteStatus("Failed to send Set Aircon Temperature command");
-      console.error("Set Aircon Temperature error:", error);
-    }
-  };
 
   if (loading)
     return (
@@ -540,27 +505,83 @@ function DeviceDetail() {
   };
 
   const turnOnCeilingLight1 = async () => {
-    await controlLight("Ceiling Light 1", ceilingLight1, "on");
+    await controlLight("Ceiling Light 1", lightDevices.ceilingLight1, "on");
   };
 
   const turnOffCeilingLight1 = async () => {
-    await controlLight("Ceiling Light 1", ceilingLight1, "off");
+    await controlLight("Ceiling Light 1", lightDevices.ceilingLight1, "off");
   };
 
-   const turnOnAircon = async () => {
-    await controlLight("Aircon", aircon, "on");
+  const turnOnCeilingLight2 = async () => {
+    await controlLight("Ceiling Light 2", lightDevices.ceilingLight2, "on");
   };
 
-  const turnOffAircon = async () => {
-    await controlLight("Aircon", aircon, "off");
-  };
-  const turnOnAirconwithTemp = async () => {
-    await controlLight("Aircon", aircon, "on");
-    await setAirconTemp("Aircon", aircon, "on");
+  const turnOffCeilingLight2 = async () => {
+    await controlLight("Ceiling Light 2", lightDevices.ceilingLight2, "off");
   };
 
+  const turnOnCeilingLight3 = async () => {
+    await controlLight("Ceiling Light 3", lightDevices.ceilingLight3, "on");
+  };
 
-  
+  const turnOffCeilingLight3 = async () => {
+    await controlLight("Ceiling Light 3", lightDevices.ceilingLight3, "off");
+  };
+
+  const turnOnCeilingLight4 = async () => {
+    await controlLight("Ceiling Light 4", lightDevices.ceilingLight4, "on");
+  };
+
+  const turnOffCeilingLight4 = async () => {
+    await controlLight("Ceiling Light 4", lightDevices.ceilingLight4, "off");
+  };
+
+  const turnOnStripLight1 = async () => {
+    await controlLight("Strip Light 1", lightDevices.stripLight1, "on");
+  };
+
+  const turnOffStripLight1 = async () => {
+    await controlLight("Strip Light 1", lightDevices.stripLight1, "off");
+  };
+
+  const turnOnStripLight2 = async () => {
+    await controlLight("Strip Light 2", lightDevices.stripLight2, "on");
+  };
+
+  const turnOffStripLight2 = async () => {
+    await controlLight("Strip Light 2", lightDevices.stripLight2, "off");
+  };
+  const turnOnStripLight3 = async () => {
+    await controlLight("Strip Light 3", lightDevices.stripLight3, "on");
+  };
+
+  const turnOffStripLight3 = async () => {
+    await controlLight("Strip Light 3", lightDevices.stripLight3, "off");
+  };
+
+  const turnOnStripLight4 = async () => {
+    await controlLight("Strip Light 4", lightDevices.stripLight4, "on");
+  };
+
+  const turnOffStripLight4 = async () => {
+    await controlLight("Strip Light 4", lightDevices.stripLight4, "off");
+  };
+
+  const turnOnStripLight5 = async () => {
+    await controlLight("Strip Light 5", lightDevices.stripLight5, "on");
+  };
+
+  const turnOffStripLight5 = async () => {
+    await controlLight("Strip Light 5", lightDevices.stripLight5, "off");
+  };
+
+  const turnOnStripLight6 = async () => {
+    await controlLight("Strip Light 5", lightDevices.stripLight6, "on");
+  };
+
+  const turnOffStripLight6 = async () => {
+    await controlLight("Strip Light 5", lightDevices.stripLight6, "off");
+  };
 
   return (
     <div className="App">
@@ -648,13 +669,13 @@ function DeviceDetail() {
           </div>
         </div>
 
-        {/* Lights Section */}
+        {/* Ceiling Lights Section */}
         <div className="lights-section">
-          <h5 className="lights-subtitle">Lights</h5>
+          <h5 className="lights-subtitle">Ceiling Lights</h5>
           <div className="lights-grid">
-            {/* Light 1 */}
+            {/* Ceiling Light 1 */}
             <div className="light-control-group">
-              <span className="light-label">Light 1</span>
+              <span className="light-label">Ceiling Light 1</span>
               <div className="light-buttons">
                 <button
                   className="light-button on-button"
@@ -670,31 +691,184 @@ function DeviceDetail() {
                 </button>
               </div>
             </div>
-          </div>
-        </div>
-        {/* Air Conditioner Section */}
-        <div className="lights-section">
-          <h5 className="lights-subtitle">Air Conditioner</h5>
-          <div className="lights-grid">
-            {/* Aircon */}
+            {/* Ceiling Light 2 */}
             <div className="light-control-group">
-              <span className="light-label">Air Conditioner</span>
+              <span className="light-label">Ceiling Light 2</span>
               <div className="light-buttons">
                 <button
                   className="light-button on-button"
-                  onClick={turnOnAirconwithTemp}
+                  onClick={turnOnCeilingLight2}
                 >
                   On
                 </button>
                 <button
                   className="light-button off-button"
-                  onClick={turnOffAircon}
+                  onClick={turnOffCeilingLight2}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Ceiling Light 3 */}
+            <div className="light-control-group">
+              <span className="light-label">Ceiling Light 3</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnCeilingLight3}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffCeilingLight3}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Ceiling Light 4 */}
+            <div className="light-control-group">
+              <span className="light-label">Ceiling Light 4</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnCeilingLight4}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffCeilingLight4}
+                >
+                  Off
+                </button>
+              </div>
+            </div> 
+          </div>
+        </div>
+
+        {/* Strip Lights Section */}
+        <div className="lights-section">
+          <h5 className="lights-subtitle">Strip Lights</h5>
+          <div className="lights-grid">
+            {/* Strip Light 1 */}
+            <div className="light-control-group">
+              <span className="light-label">Strip Light 1</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnStripLight1}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffStripLight1}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Strip Light 2 */}
+            <div className="light-control-group">
+              <span className="light-label">Strip Light 2</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnStripLight2}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffStripLight2}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Strip Light 3 */}
+            <div className="light-control-group">
+              <span className="light-label">Strip Light 3</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnStripLight3}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffStripLight3}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Strip Light 4 */}
+            <div className="light-control-group">
+              <span className="light-label">Strip Light 4</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnStripLight4}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffStripLight4}
+                >
+                  Off
+                </button>
+              </div>
+            </div>
+
+            {/* Strip Light 5 */}
+            <div className="light-control-group">
+              <span className="light-label">Strip Light 5</span>
+              <div className="light-buttons">
+                <button
+                  className="light-button on-button"
+                  onClick={turnOnStripLight5}
+                >
+                  On
+                </button>
+                <button
+                  className="light-button off-button"
+                  onClick={turnOffStripLight5}
                 >
                   Off
                 </button>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Art Section */}
+        <div className="lights-section">
+          <h5 className="lights-subtitle">Art Mood</h5>
+          <div className="light-buttons">
+            <button
+              className="light-button on-button"
+              onClick={turnOnStripLight6}
+            >
+              On
+            </button>
+            <button
+              className="light-button off-button"
+              onClick={turnOffStripLight6}
+            >
+              Off
+            </button>
+          </div>
+          <div className="lights-grid"></div>
         </div>
       </header>
     </div>
